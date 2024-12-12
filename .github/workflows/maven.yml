@@ -32,12 +32,18 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml -Dmaven.test.skip=true
+    - name: Display output
+      run: |
+        sudo apt update -y
+        sudo apt install -y tree
+        echo "${{ github.workspace }}"
+        tree "${{ github.workspace }}"
     - name: Upload artifact for deployment job
       if: matrix.java == '17'
       uses: actions/upload-artifact@v4
       with:
         name: java-app
-        path: '${{ github.workspace }}/target/*.jar'
+        path: '${{ github.workspace }}/yudao-server/target/*.jar'
 
   deploy:
     runs-on: ubuntu-latest

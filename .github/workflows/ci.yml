@@ -37,7 +37,21 @@ jobs:
         javac hello-world-java/HelloWorld.java
         CLASSPATH=hello-world-java java HelloWorld
 
-    - uses: actions/checkout@v4  # 检出代码，相当于git clone
+    - name: Prepare gradle
+      run: |
+        # To install gradle7.2 use:
+        #sudo apt install snap -y && sudo snap install gradle --classic
+        wget https://services.gradle.org/distributions/gradle-8.11.1-bin.zip
+        mkdir /opt/gradle
+        unzip -d /opt/gradle gradle-8.11.1-bin.zip
+        ls /opt/gradle/gradle-8.11.1
+        PATH=$PATH:/opt/gradle/gradle-8.11.1/bin gradle -v
+        export PATH=$PATH:/opt/gradle/gradle-8.11.1/bin
+
+    - uses: actions/checkout@v4
+    - name: Build jar
+      run: |
+        PATH=$PATH:/opt/gradle/gradle-8.11.1/bin gradle build
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v4
       with:

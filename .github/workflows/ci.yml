@@ -48,9 +48,18 @@ jobs:
         PATH=$PATH:/opt/gradle/gradle-8.11.1/bin gradle -v
         export PATH=$PATH:/opt/gradle/gradle-8.11.1/bin
 
+    - name: Install sdkman
+      run: |
+        sudo apt install zip -y
+        curl -s "https://get.sdkman.io?rcupdate=false" | bash
+        source "$HOME/.sdkman/bin/sdkman-init.sh"
+        sdk version
+
     - uses: actions/checkout@v4
     - name: Build jar
       run: |
+        sdk install springboot
+        springboot run src/main/java/com/example/api.java
         PATH=$PATH:/opt/gradle/gradle-8.11.1/bin gradle build
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v4
